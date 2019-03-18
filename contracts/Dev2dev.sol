@@ -96,11 +96,20 @@ contract Dev2dev {
         
         sendMoneyToWorker( address(uint160(orders[_orderId].worker)), orders[_orderId].balance);
         
-        orders[_orderId].balance = 0;
+        //orders[_orderId].balance = 0;
         
         orders[_orderId].isComplete = true;
 
         emit OrderApproved(_orderId);
+    }
+    
+    function cancelOrder(uint _orderId) public {
+        require(_orderId < orders.length, "There is no order with the given id");
+        require(msg.sender == orders[_orderId].employer, "Only employer can delete his orders");
+        
+        address payable employer = address(uint160(msg.sender));
+        employer.transfer(orders[_orderId].balance);
+        
     }
 
     function sendMoneyToWorker(address payable _worker, uint _amount) private {
