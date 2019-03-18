@@ -1,4 +1,4 @@
-pragma solidity >=0.4.25 <0.6.0;
+pragma solidity >=0.4.22 <0.6.0;
 
 contract Dev2dev {
 
@@ -14,6 +14,7 @@ contract Dev2dev {
         bool isComplete; // indicator that this order is complete
     }
     
+    address private owner;
     Order[] public orders;
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -22,7 +23,7 @@ contract Dev2dev {
     event OrderApproved(uint indexed _id);
 
     constructor() public {
-        
+        owner = msg.sender;
     }
 
     /**
@@ -74,6 +75,7 @@ contract Dev2dev {
 
         require(_orderId < orders.length, "There is no order with the given id");
         require(orders[_orderId].worker == address(0), "Somebody is already accepted this order");
+        
         //add worker's payment
         require(msg.value >= orders[_orderId].payment, "Not enough money to accetp this order");
         orders[_orderId].balance += msg.value;
